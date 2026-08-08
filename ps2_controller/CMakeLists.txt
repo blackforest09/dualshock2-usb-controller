@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(ps2_controller ps2_controller.c )
+add_executable(ps2_controller src/main.c )
 
 pico_set_program_name(ps2_controller "ps2_controller")
 pico_set_program_version(ps2_controller "0.1")
