@@ -1,0 +1,25 @@
+# Build
+build/
+cmake-build-*/
+out/
+
+# CMake generated
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+Makefile
+
+# Compiled files
+*.elf
+*.uf2
+*.bin
+*.hex
+*.map
+*.o
+*.d
+*.a
+
+# OS
+.DS_Store
+Thumbs.db
