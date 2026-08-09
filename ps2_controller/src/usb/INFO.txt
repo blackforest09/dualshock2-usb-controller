@@ -1,0 +1,20 @@
+1. USB device descriptor 
+    - ¿Quién soy?
+    - Aquí se define:
+        - Manufacter
+        - Product
+        - VID
+        - PID
+
+2. HID report descriptor
+    - ¿Qué controles tengo y cómo están codificados?
+
+3. HID report 
+    - ¿Qué valores tienen ahora mismo esos controles?
+
+
+------  INFO DE CADA PROGRAMA -------
+usb_hid.h           -> interfaz del módulo usb
+usb_hid.c           -> Lógica para manejar/enviar HID
+usb_descriptor.h    -> Declaraciones de los descriptores
+usb_descriptor.c    -> Definición de los descriptores USB
