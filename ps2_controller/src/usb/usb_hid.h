@@ -1,4 +1,4 @@
-// Interface of USB module
+// Declaration of USB module
 
 #ifndef USB_HID_H
 #define USB_HID_H

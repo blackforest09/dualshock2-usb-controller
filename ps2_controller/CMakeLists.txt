@@ -34,44 +34,39 @@ project(ps2_controller C CXX ASM)
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
-
+# Qué archivos forman nuestro programa
 add_executable(ps2_controller 
     src/main.c 
-    src/usb/usb_hid.c
+    src/led/led.c
+    # src/usb/usb_descriptors.c
+    # src/usb/usb_hid.c
 )
 
 pico_set_program_name(ps2_controller "ps2_controller")
 pico_set_program_version(ps2_controller "0.1")
 
-# Generate PIO header
-pico_generate_pio_header(ps2_controller ${CMAKE_CURRENT_LIST_DIR}/blink.pio)
-
 # Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(ps2_controller 1)
-pico_enable_stdio_usb(ps2_controller 0)
+pico_enable_stdio_uart(ps2_controller 0)
+pico_enable_stdio_usb(ps2_controller 1)
 
 # Add the standard library to the build
 target_link_libraries(ps2_controller
-        pico_stdlib
-        tinyusb_device
+    pico_stdlib
 )
 
 # Add the standard include files to the build
+# Dónde buscar los ficheros .h
 target_include_directories(ps2_controller PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src
-        ${CMAKE_CURRENT_LIST_DIR}/src/usb
+    ${CMAKE_CURRENT_LIST_DIR}/src
+    ${CMAKE_CURRENT_LIST_DIR}/src/led
+    # ${CMAKE_CURRENT_LIST_DIR}/src/usb    
 )
 
 # Add any user requested libraries
+# Qué librerías usar
 target_link_libraries(ps2_controller 
-        hardware_spi
-        hardware_dma
-        hardware_pio
-        hardware_timer
-
-        pico_stdlib
-        tinyusb_device
+    pico_stdlib
 )
 
+# Generar .uf2, .bin, etc
 pico_add_extra_outputs(ps2_controller)
-
