@@ -4,8 +4,9 @@
 #define USB_HID_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
-void usb_hid_init(void);
+bool usb_hid_init(void);
 void usb_hid_task(void);
 
 #endif
