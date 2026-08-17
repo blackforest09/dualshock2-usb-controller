@@ -1,5 +1,19 @@
-#ifndef USB_DESCRIPTORS_H
-#define USB_DESCRIPTORS_H
+#ifndef USB_DESCRIPTORS_H_
+#define USB_DESCRIPTORS_H_
 
+// enum
+// {
+//   REPORT_ID_KEYBOARD = 1,
+//   REPORT_ID_MOUSE,
+//   REPORT_ID_CONSUMER_CONTROL,
+//   REPORT_ID_GAMEPAD,
+//   REPORT_ID_COUNT
+// };
 
-#endif
+enum
+{
+  REPORT_ID_GAMEPAD = 1,
+  REPORT_ID_COUNT
+};
+
+#endif /* USB_DESCRIPTORS_H_ */
