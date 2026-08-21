@@ -54,5 +54,4 @@ spi_write_read_blocking(
 );
 
 gpio_put(PS2_PIN_CS, 1);
-sleep_ms(100);
 }

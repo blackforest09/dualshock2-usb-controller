@@ -21,15 +21,20 @@ int main (void) {
   sleep_ms(2000);
 
   usb_hid_init();
-  //ps2_init();
+  ps2_init();
 
   uint64_t last_debug;
+  uint64_t last_ps2;
 
   while (1) {
     usb_hid_task();
-    //ps2_task();
 
     uint64_t now = time_us_64();
+
+    if (now - last_ps2 >= 100000) {
+      last_ps2 = now;
+      ps2_task();
+    }
     
     if (now - last_debug >= 1000000) {
       last_debug = now;
