@@ -1,10 +1,40 @@
+#include <stdio.h>
+#include "pico/stdlib.h"
+#include "hardware/uart.h"
+
 #include "usb_hid.h"
-#include "ps2_protocol.h"
+#include "ps2_controller.h"
 
 int main (void) {
-    usb_hid_init();
+  
+  stdio_init_all();
 
-    while (1) {
-      usb_hid_task();
+  uart_init(uart0, 115200);
+
+  gpio_set_function(0, GPIO_FUNC_UART);
+  gpio_set_function(1, GPIO_FUNC_UART);
+
+  printf("--------------------------\n");
+  printf("PS2 Controller strting ... \n");
+  printf("--------------------------\n\n");
+
+  sleep_ms(2000);
+
+  usb_hid_init();
+  //ps2_init();
+
+  uint64_t last_debug;
+
+  while (1) {
+    usb_hid_task();
+    //ps2_task();
+
+    uint64_t now = time_us_64();
+    
+    if (now - last_debug >= 1000000) {
+      last_debug = now;
+      printf("Test\n");
     }
+
+  }
 }
