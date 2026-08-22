@@ -36,10 +36,10 @@ int main (void) {
       ps2_task();
     }
     
-    if (now - last_debug >= 1000000) {
-      last_debug = now;
-      printf("Test\n");
-    }
+    // if (now - last_debug >= 1000000) {
+    //   last_debug = now;
+    //   printf("Test\n");
+    // }
 
   }
 }
