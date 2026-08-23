@@ -42,10 +42,19 @@ typedef struct {
     bool analog_mode;
 } ps2_struct;
 
+typedef struct {
+    uint8_t lx_center;
+    uint8_t ly_center;
+    uint8_t rx_center;
+    uint8_t ry_center;
+} ps2_calibration_t;
+
 extern ps2_struct ps2_state; 
+extern ps2_calibration_t ps2_cal;
  
 void ps2_init(void);
 void ps2_task(void);
 void ps2_decode(const uint8_t rx[9], ps2_struct *state);
+int8_t ps2_calibrate(uint8_t value, uint8_t center);
 
 #endif

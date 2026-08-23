@@ -26,19 +26,23 @@ int main (void) {
   uint64_t last_debug;
   uint64_t last_ps2;
 
-  while (1) {
+  while (true) {
+    ps2_task();
     usb_hid_task();
 
-    uint64_t now = time_us_64();
+    // uint64_t now = time_us_64();
 
-    if (now - last_ps2 >= 100000) {
-      last_ps2 = now;
-      ps2_task();
-    }
+    // if (now - last_ps2 >= 50000) {
+    //   last_ps2 = now;
+    //   ps2_task();
+    // }
     
-    // if (now - last_debug >= 1000000) {
+    // if (now - last_debug >= 500000) {
     //   last_debug = now;
-    //   printf("Test\n");
+    //   printf("LX RAW=%3d CENTER=%3d HID=%4d\r\n",
+    //     ps2_state.lx,
+    //     ps2_cal.lx_center,
+    //     ps2_calibrate(ps2_state.lx, ps2_cal.lx_center));
     // }
 
   }
