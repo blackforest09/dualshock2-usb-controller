@@ -2,6 +2,7 @@
 #include "pico/stdlib.h"
 #include "ds2_controller.h"
 
+
 //--------------------------------------------------------------------
 // Variables
 //--------------------------------------------------------------------
@@ -11,14 +12,16 @@ ds2_calibration_t ds2_cal;
 
 static bool previous_analog_mode = false;
 
-// Temporización de la comunicación
-static uint64_t ps2_next_time = 0;
+// Communication timing
+static uint64_t next_comm_time = 0;
 static uint64_t next_action_us = 0;
+static uint64_t init_comm_wait = 50;
+static uint64_t between_bytes_wait = 80;
 
-#define PS2_PERIOD_US 1000
+#define COMM_PERIOD_US 1000
 
-// Estado de la comunicación
-static bool ps2_busy = false;
+// State of communication
+static bool comm_busy = false;
 static int byte_index = 0;
 
 // SPI Data
@@ -64,13 +67,13 @@ void ds2_init(void)
     gpio_set_dir(DS2_PIN_CS, GPIO_OUT);
     gpio_put(DS2_PIN_CS, true);
 
-    // Primera comunicación inmediatamente
-    ps2_next_time = time_us_64();
+    // First communication immediately
+    next_comm_time = time_us_64();
 }
 
 
 //--------------------------------------------------------------------
-// Tarea PS2
+// Dualshock2 Task
 //--------------------------------------------------------------------
 
 void ds2_task(void)
@@ -78,35 +81,35 @@ void ds2_task(void)
     uint64_t now = time_us_64();
 
     //----------------------------------------------------------------
-    // No hay comunicación en curso
+    // No communication in progress
     //----------------------------------------------------------------
 
-    if (!ps2_busy)
+    if (!comm_busy)
     {
-        if (now < ps2_next_time)
+        if (now < next_comm_time)
             return;
 
-        // Comienza una nueva comunicación
-        ps2_busy = true;
+        // Starts a new communication
+        comm_busy = true;
         byte_index = 0;
 
         gpio_put(DS2_PIN_CS, 0);
 
-        // Espera inicial de 50 us
-        next_action_us = now + 50;
+        // Initial wait of 50 us
+        next_action_us = now + init_comm_wait;
 
         return;
     }
 
     //----------------------------------------------------------------
-    // Comunicación en curso
+    // Communication in progress
     //----------------------------------------------------------------
 
     if (now < next_action_us)
         return;
 
     //----------------------------------------------------------------
-    // Transmitir/recibir un byte
+    // Transmit/Receive a byte
     //----------------------------------------------------------------
 
     spi_write_read_blocking(
@@ -119,7 +122,7 @@ void ds2_task(void)
     byte_index++;
 
     //----------------------------------------------------------------
-    // ¿Hemos terminado los 9 bytes?
+    // Communication finished?
     //----------------------------------------------------------------
 
     if (byte_index >= 9)
@@ -128,23 +131,23 @@ void ds2_task(void)
 
         ds2_decode(rx, &ds2_state);
 
-        ps2_busy = false;
+        comm_busy = false;
 
-        // Mantener periodo de 2 ms entre inicios de comunicación
-        ps2_next_time += PS2_PERIOD_US;
+        // Keep 1 ms period between communications
+        next_comm_time += COMM_PERIOD_US;
 
-        // Evitar que se quede atrasado si alguna comunicación tarda demasiado
-        if (ps2_next_time < now)
-            ps2_next_time = now + PS2_PERIOD_US;
+        // Avoid task stuck if communication takes over 1 ms
+        if (next_comm_time < now)
+            next_comm_time = now + COMM_PERIOD_US;
 
         return;
     }
 
     //----------------------------------------------------------------
-    // Esperar 80 us antes del siguiente byte
+    // Wait 80 us before following byte
     //----------------------------------------------------------------
 
-    next_action_us = now + 80;
+    next_action_us = now + between_bytes_wait;
 }
 
 
@@ -171,7 +174,7 @@ void ds2_decode(const uint8_t rx[9], ds2_struct *state)
     bool analog_mode = (rx[1] == 0xCE);
 
     //----------------------------------------------------------------
-    // Capturar centro de joysticks al entrar en modo analógico
+    // Capture joystick position at idle when analog mode is enabled
     //----------------------------------------------------------------
 
     if (analog_mode && !previous_analog_mode)
@@ -247,7 +250,7 @@ int8_t ds2_calibrate(uint8_t value, uint8_t center)
 
     int16_t delta = (int16_t)value - center;
 
-    // Limitar recorrido
+    // Limit travel
     if (delta > range)
         delta = range;
 

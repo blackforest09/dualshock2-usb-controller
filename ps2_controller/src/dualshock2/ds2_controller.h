@@ -4,14 +4,24 @@
 #include "hardware/spi.h"
 #include "hardware/pio.h"
 
+
+//--------------------------------------------------------------------
+// Definition of SPI Interface
+//--------------------------------------------------------------------
+
 #define DS2_SPI       spi0
 #define DS2_PIN_MISO  16    // Master In Slave Out
 #define DS2_PIN_CS    17    // Chip Select
 #define DS2_PIN_SCK   18    // SPI Clock
 #define DS2_PIN_MOSI  19    // Master Out Slave In
 
+
+//--------------------------------------------------------------------
+// Structures
+//--------------------------------------------------------------------
+
 typedef struct {
-    // Botones
+    // Buttons
     bool select;
     bool start;
     bool l3;
@@ -38,7 +48,7 @@ typedef struct {
     uint8_t lx;
     uint8_t ly;
 
-    // Estado
+    // Analog State
     bool analog_mode;
 } ds2_struct;
 
@@ -51,6 +61,11 @@ typedef struct {
 
 extern ds2_struct ds2_state; 
 extern ds2_calibration_t ds2_cal;
+
+
+//--------------------------------------------------------------------
+// Functions
+//--------------------------------------------------------------------
  
 void ds2_init(void);
 void ds2_task(void);
