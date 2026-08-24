@@ -4,7 +4,7 @@
 #include "tusb.h"
 
 #include "usb_descriptors.h"
-#include "ps2_controller.h"
+#include "ds2_controller.h"
 
 
 //--------------------------------------------------------------------+
@@ -136,66 +136,66 @@ static void hid_task(void)
 
     // Mapping with ps2_state
 
-    if (ps2_state.up && ps2_state.right)
+    if (ds2_state.up && ds2_state.right)
         report.hat = GAMEPAD_HAT_UP_RIGHT;
-    else if (ps2_state.up && ps2_state.left)
+    else if (ds2_state.up && ds2_state.left)
         report.hat = GAMEPAD_HAT_UP_LEFT;
-    else if (ps2_state.down && ps2_state.right)
+    else if (ds2_state.down && ds2_state.right)
         report.hat = GAMEPAD_HAT_DOWN_RIGHT;
-    else if (ps2_state.down && ps2_state.left)
+    else if (ds2_state.down && ds2_state.left)
         report.hat = GAMEPAD_HAT_DOWN_LEFT;
-    else if (ps2_state.up)
+    else if (ds2_state.up)
         report.hat = GAMEPAD_HAT_UP;
-    else if (ps2_state.down)
+    else if (ds2_state.down)
         report.hat = GAMEPAD_HAT_DOWN;
-    else if (ps2_state.left)
+    else if (ds2_state.left)
         report.hat = GAMEPAD_HAT_LEFT;
-    else if (ps2_state.right)
+    else if (ds2_state.right)
         report.hat = GAMEPAD_HAT_RIGHT;
     else
         report.hat = GAMEPAD_HAT_CENTERED;
 
-    if (ps2_state.l1)
+    if (ds2_state.l1)
         report.buttons |= GAMEPAD_BUTTON_5;
 
-    if (ps2_state.r1)
+    if (ds2_state.r1)
         report.buttons |= GAMEPAD_BUTTON_6;
 
-    if (ps2_state.l2)
+    if (ds2_state.l2)
         report.buttons |= GAMEPAD_BUTTON_7;
 
-    if (ps2_state.r2)
+    if (ds2_state.r2)
         report.buttons |= GAMEPAD_BUTTON_8;
 
-    if (ps2_state.select)
+    if (ds2_state.select)
         report.buttons |= GAMEPAD_BUTTON_9;
 
-    if (ps2_state.start)
+    if (ds2_state.start)
         report.buttons |= GAMEPAD_BUTTON_10;
 
-    if (ps2_state.l3)
+    if (ds2_state.l3)
         report.buttons |= GAMEPAD_BUTTON_11;
 
-    if (ps2_state.r3)
+    if (ds2_state.r3)
         report.buttons |= GAMEPAD_BUTTON_12;  
     
-    if (ps2_state.cross)
+    if (ds2_state.cross)
         report.buttons |= GAMEPAD_BUTTON_1;
 
-    if (ps2_state.circle)
+    if (ds2_state.circle)
         report.buttons |= GAMEPAD_BUTTON_2;
 
-    if (ps2_state.square)
+    if (ds2_state.square)
         report.buttons |= GAMEPAD_BUTTON_3;
 
-    if (ps2_state.triangle)
+    if (ds2_state.triangle)
         report.buttons |= GAMEPAD_BUTTON_4;
 
-    if (ps2_state.analog_mode) {
-        report.x    = ps2_calibrate(ps2_state.lx, ps2_cal.lx_center);
-        report.y    = ps2_calibrate(ps2_state.ly, ps2_cal.ly_center);
-        report.rx   = ps2_calibrate(ps2_state.rx, ps2_cal.rx_center);
-        report.ry   = ps2_calibrate(ps2_state.ry, ps2_cal.ry_center);
+    if (ds2_state.analog_mode) {
+        report.x    = ds2_calibrate(ds2_state.lx, ds2_cal.lx_center);
+        report.y    = ds2_calibrate(ds2_state.ly, ds2_cal.ly_center);
+        report.rx   = ds2_calibrate(ds2_state.rx, ds2_cal.rx_center);
+        report.ry   = ds2_calibrate(ds2_state.ry, ds2_cal.ry_center);
     }
 
     tud_hid_report(
