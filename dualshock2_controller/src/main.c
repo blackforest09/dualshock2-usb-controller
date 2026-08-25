@@ -13,6 +13,10 @@ int main (void) {
 
   gpio_set_function(0, GPIO_FUNC_UART);
   gpio_set_function(1, GPIO_FUNC_UART);
+
+  gpio_init(25);
+  gpio_set_dir(25, true);
+  gpio_put(25, true);
  
   printf("---------------------------------\n");
   printf("DualShock2 Controller strting ...\n");

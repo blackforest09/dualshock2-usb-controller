@@ -17,6 +17,7 @@ static uint64_t next_comm_time = 0;
 static uint64_t next_action_us = 0;
 static uint64_t init_comm_wait = 50;
 static uint64_t between_bytes_wait = 80;
+static uint64_t baudrate_spi_hz = 250000;
 
 #define COMM_PERIOD_US 1000
 
@@ -48,7 +49,7 @@ static uint8_t rx[9];
 void ds2_init(void)
 {
     // SPI initialization at 250kHz
-    spi_init(DS2_SPI, 250000);
+    spi_init(DS2_SPI, baudrate_spi_hz);
 
     spi_set_format(
         DS2_SPI,
@@ -171,6 +172,36 @@ uint8_t reverse_bits(uint8_t x)
 
 void ds2_decode(const uint8_t rx[9], ds2_struct *state)
 {
+
+    if (rx[1] == 0xFF)
+    {
+        // Controller disconnected, all bytes must be FF for pullup resistor
+
+        state->analog_mode = false;
+
+        state->left     = false;
+        state->down     = false;
+        state->right    = false;
+        state->up       = false;
+
+        state->start    = false;
+        state->r3       = false;
+        state->l3       = false;
+        state->select   = false;
+
+        state->square   = false;
+        state->cross    = false;
+        state->circle   = false;
+        state->triangle = false;
+
+        state->r1       = false;
+        state->l1       = false;
+        state->r2       = false;
+        state->l2       = false;
+
+        return;
+    }
+
     bool analog_mode = (rx[1] == 0xCE);
 
     //----------------------------------------------------------------
