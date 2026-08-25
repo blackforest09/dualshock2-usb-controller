@@ -12,30 +12,30 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
-set(PICO_BOARD pico CACHE STRING "Board type")
+set(PICO_BOARD pico2 CACHE STRING "Board type")
 
 cmake_minimum_required(VERSION 3.13)
 
 include(pico_sdk_import.cmake)
 
-project(ps2_controller C CXX ASM)
+project(dualshock2_controller C CXX ASM)
 
 pico_sdk_init()
 
-add_executable(ps2_controller
+add_executable(dualshock2_controller
     src/main.c
     src/usb/usb_descriptors.c
     src/usb/usb_hid.c
     src/dualshock2/ds2_controller.c
 )
 
-target_include_directories(ps2_controller PUBLIC
+target_include_directories(dualshock2_controller PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/src
     ${CMAKE_CURRENT_LIST_DIR}/src/usb
     ${CMAKE_CURRENT_LIST_DIR}/src/dualshock2
 )
 
-target_link_libraries(ps2_controller
+target_link_libraries(dualshock2_controller
     pico_stdlib
     pico_unique_id
     tinyusb_device
@@ -44,7 +44,7 @@ target_link_libraries(ps2_controller
     hardware_pio
 )
 
-pico_enable_stdio_uart(ps2_controller 1)
-pico_enable_stdio_usb(ps2_controller 0)
+pico_enable_stdio_uart(dualshock2_controller 1)
+pico_enable_stdio_usb(dualshock2_controller 0)
 
-pico_add_extra_outputs(ps2_controller)
+pico_add_extra_outputs(dualshock2_controller)
